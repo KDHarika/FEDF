@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>📚 Modern Bookstore</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #f0f4ff, #e6f3ff);
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+
+    h1 {
+      text-align: center;
+      color: #004aad;
+      margin-bottom: 30px;
+    }
+
+    .book-list, .cart {
+      max-width: 800px;
+      margin: 20px auto;
+      background: white;
+      padding: 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .book-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .book {
+      background: #f9fbff;
+      border: 1px solid #e1e9ff;
+      border-radius: 12px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .book:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .book strong {
+      color: #003d9e;
+      display: block;
+      font-size: 1.1em;
+      margin-bottom: 5px;
+    }
+
+    .book small {
+      color: #666;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .book span {
+      font-weight: bold;
+      color: #222;
+    }
+
+    button {
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 12px;
+      margin-top: 8px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #0056b3;
+    }
+
+    .cart h2 {
+      margin-top: 0;
+      color: #004aad;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      background: #f7f9ff;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin: 8px 0;
+      align-items: center;
+    }
+
+    .cart-item button {
+      background: #ff4c4c;
+    }
+
+    .cart-item button:hover {
+      background: #d93c3c;
+    }
+
+    .cart-total {
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: right;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>📚 Modern Online Bookstore</h1>
+
+  <div class="book-list" id="bookList"></div>
+
+  <div class="cart">
+    <h2>🛒 Shopping Cart</h2>
+    <div id="cartItems"></div>
+    <div class="cart-total" id="cartTotal">Total: ₹0</div>
+  </div>
+
+  <script>
+    // ======== Data ========
+    const books = [
+      { title: "Mastering JavaScript", author: "Ethan Reed", price: 599, availability: "in stock" },
+      { title: "React for Developers", author: "Sophia Lee", price: 749, availability: "in stock" },
+      { title: "Node.js Deep Dive", author: "Liam Carter", price: 699, availability: "out of stock" },
+      { title: "Python Crash Course", author: "Ava Patel", price: 499, availability: "in stock" },
+      { title: "Data Science 101", author: "Noah Singh", price: 899, availability: "in stock" },
+      { title: "Web Design Secrets", author: "Maya Gomez", price: 550, availability: "in stock" }
+    ];
+
+    // ======== Cart logic ========
+    let cart = [];
+
+    function addToCart(book) {
+      cart.push(book);
+      updateCartUI();
+    }
+
+    function removeFromCart(index) {
+      cart.splice(index, 1);
+      updateCartUI();
+    }
+
+    function calculateTotal() {
+      return cart.reduce((sum, book) => sum + book.price, 0);
+    }
+
+    // ======== UI update ========
+    function displayBooks() {
+      const bookList = document.getElementById("bookList");
+      bookList.innerHTML = "";
+
+      books.forEach((book, index) => {
+        const bookDiv = document.createElement("div");
+        bookDiv.classList.add("book");
+        bookDiv.innerHTML = `
+          <strong>${book.title}</strong>
+          <small>by ${book.author}</small>
+          <span>₹${book.price}</span><br>
+          ${
+            book.availability === "in stock"
+            ? `<button onclick="addToCart(books[${index}])">Add to Cart</button>`
+            : `<span style="color:red;">Out of Stock</span>`
+          }
+        `;
+        bookList.appendChild(bookDiv);
+      });
+    }
+
+    function updateCartUI() {
+      const cartItemsDiv = document.getElementById("cartItems");
+      const cartTotalDiv = document.getElementById("cartTotal");
+
+      cartItemsDiv.innerHTML = "";
+      cart.forEach((book, index) => {
+        const itemDiv = document.createElement("div");
+        itemDiv.classList.add("cart-item");
+        itemDiv.innerHTML = `
+          <span>${book.title} - ₹${book.price}</span>
+          <button onclick="removeFromCart(${index})">Remove</button>
+        `;
+        cartItemsDiv.appendChild(itemDiv);
+      });
+
+      cartTotalDiv.textContent = `Total: ₹${calculateTotal()}`;
+    }
+
+    // ======== Initialize ========
+    displayBooks();
+    updateCartUI();
+  </script>
+</body>
+</html>
